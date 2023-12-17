@@ -21,9 +21,12 @@ const KAFKA_TOPIC = 'engagement-tracked';
 
 // Subscribe to the Kafka topic
 kafka.subscribe(KAFKA_TOPIC, async (message) => {
-  console.log(`Analyzing engagement for "${message.value}"`);
+  console.log(`Analyzing engagement for "${JSON.stringify(message.value.source)}"`);
   // Index data to Elasticsearch
-  await elasticsearch.index(ELASTIC_SEARCH_INDEX, JSON.parse(message.value));
+  // parse the string JSON returned from Kafka
+  // pass an array containing the object to the bulk method
+  // using bulk to set a custom-id and avoid duplicates
+  await elasticsearch.bulk(ELASTIC_SEARCH_INDEX, [JSON.parse(message.value)]);
 });
 
 // Gracefully handle process termination
