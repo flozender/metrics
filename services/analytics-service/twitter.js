@@ -1,8 +1,9 @@
 require('dotenv').config();
 
-const { trackPost } = require('./index.js');
-
 const axios = require('axios');
+const sanitizeHtml = require('sanitize-html');
+
+const { trackPost } = require('./index.js');
 const QUERY = "blockchain";
 
 let config = {
@@ -44,12 +45,13 @@ const fetchTweets = (config) => {
                     return null;
                 }
                 const post_data = post.content.itemContent.tweet_results.result.legacy;
+                const createdAt = new Date(post_data.created_at).toUTCString();
                 return ({
                     id: post.entryId,
-                    content: post_data.full_text,
+                    content: sanitizeHtml(post_data.full_text, {allowedTags: []}),
                     likes: post_data.favorite_count,
                     comments: post_data.reply_count,
-                    createdAt: post_data.created_at,
+                    createdAt,
                     createdBy: post_data.user_id_str,
                     source: 'Twitter',
                     timestamp: new Date().toLocaleString()
