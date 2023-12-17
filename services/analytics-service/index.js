@@ -4,13 +4,13 @@ const kafka = require('../../lib/kafka-client');
 
 const KAFKA_TOPIC = 'engagement-tracked';
 
-const trackSearchTerm = (searchTerm, likes) => {
+const trackPost = (content, likes, source) => {
   // Simulate tracking logic
-  console.log(`Tracking engagement for "${searchTerm}"`);
+  console.log(`Tracking engagement on "${source}"`);
   // Produce data to Kafka
-  kafka.produce(KAFKA_TOPIC, { searchTerm, timestamp: Date.now(), likes });
+  kafka.produce(KAFKA_TOPIC, { content, timestamp: Date.now(), likes, source });
 };
 
-trackSearchTerm("Blockchain is gonna pop off!", 9);
+trackPost("Blockchain is gonna pop off!", 9, "Twitter");
 
-module.exports = { trackSearchTerm };
+module.exports = { trackPost };

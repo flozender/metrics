@@ -21,8 +21,7 @@ const KAFKA_TOPIC = 'engagement-tracked';
 
 // Subscribe to the Kafka topic
 kafka.subscribe(KAFKA_TOPIC, async (message) => {
-  // Simulate analytics logic
-  console.log(`Analyzing engagement for "${message.value}", with offset ${message.offset}`);
+  console.log(`Analyzing engagement for "${message.value}"`);
   // Index data to Elasticsearch
   await elasticsearch.index(ELASTIC_SEARCH_INDEX, JSON.parse(message.value));
 });
